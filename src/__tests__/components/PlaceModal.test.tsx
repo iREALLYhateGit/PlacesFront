@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PlaceModal } from '../../components/PlaceModal';
-import type { Place, PlaceCreate } from '../../types/place';
+import type { Place } from '../../types/place';
 
 // jsdom не реализует HTMLDialogElement.showModal/close — мокаем с реальным поведением атрибута open
 beforeAll(() => {
