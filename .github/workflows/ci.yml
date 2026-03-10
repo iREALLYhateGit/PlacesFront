@@ -2,10 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main"]
+    branches: [ "main", "lab2"]
   pull_request:
   workflow_dispatch:
-
 
 concurrency:
   group: ci-${{ github.ref }}
