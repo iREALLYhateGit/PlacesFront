@@ -1,0 +1,36 @@
+name: Notify Infra Integration
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - 'labs/**'
+
+permissions:
+  contents: read
+
+jobs:
+  notify-infra:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify places-infra
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_CI_TOKEN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+        run: |
+          curl --fail-with-body --silent --show-error \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/${REPO_OWNER}/places-infra/dispatches" \
+            -d @- <<EOF
+          {
+            "event_type": "orchestrate-integration",
+            "client_payload": {
+              "source_repo": "${{ github.event.repository.name }}",
+              "ref_name": "${{ github.ref_name }}",
+              "sha": "${{ github.sha }}"
+            }
+          }
+          EOF
