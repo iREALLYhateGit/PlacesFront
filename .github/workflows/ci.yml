@@ -18,8 +18,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-test:
-    name: build-test
+  test:
+    name: test
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -39,6 +39,26 @@ jobs:
 
       - name: run unit tests
         run: npm test
+  
+  docker:
+    name: docker
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.event.client_payload.ref_name || github.ref_name }}
 
-      - name: run build
-        run: npm run build
+      - name: log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: shuasd/places-frontend
