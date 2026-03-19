@@ -12,7 +12,7 @@ export function PlaceCard({ place, onOpen, onDelete }: Props) {
   const typeString = typeof place.type === 'string' ? place.type : place.type.title;
   
   return (
-    <article className="card" role="button" tabIndex={0} onClick={() => onOpen(place)}
+    <div className="card" tabIndex={0} onClick={() => onOpen(place)}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') onOpen(place);
       }}
@@ -35,6 +35,6 @@ export function PlaceCard({ place, onOpen, onDelete }: Props) {
         <span className="pill">{PLACE_TYPE_LABEL[typeString]}</span>
         <span className="muted">★ {place.popularityScore}/5</span>
       </div>
-    </article>
+    </div>
   );
 }
