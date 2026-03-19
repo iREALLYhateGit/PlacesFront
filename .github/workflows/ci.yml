@@ -7,7 +7,6 @@ on:
       - dev
       - 'labs/**'
       - 'fix/**'
-  pull_request:
   workflow_dispatch:
   repository_dispatch:
     types:
@@ -40,10 +39,40 @@ jobs:
       - name: run unit tests
         run: npm test
   
+  sonar:
+    name: sonarqube scan
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.event.client_payload.ref_name || github.ref_name }}
+
+      - name: set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: install dependencies
+        run: npm ci
+
+      - name: run tests with coverage
+        run: npm run test:coverage
+
+      - name: sonarqube scan
+        uses: sonarsource/sonarqube-scan-action@v5
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   docker:
     name: docker
     runs-on: ubuntu-latest
-    needs: test
+    needs: sonar
     steps:
       - name: checkout
         uses: actions/checkout@v4
