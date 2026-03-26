@@ -1,4 +1,4 @@
-name: Frontend CI (Lab 3)
+name: Notify Infra Integration
 
 on:
   push:
@@ -6,11 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  ci:
-    uses: iREALLYhateGit/places-infra/.github/workflows/ci.yml@labs/lab3
-    with:
-      service-name: frontend
-      docker-image: shuasd/places-frontend
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: send dispatch to places-infra
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.INFRA_DISPATCH_TOKEN }}
+          repository: iREALLYhateGit/places-infra
+          event-type: frontend-pushed
+          client-payload: '{"ref": "labs/lab3"}'
