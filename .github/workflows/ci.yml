@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: send dispatch to places-infra
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.INFRA_DISPATCH_TOKEN }}
-          repository: iREALLYhateGit/places-infra
-          event-type: frontend-pushed
-          client-payload: '{"ref": "labs/lab3"}'
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.INFRA_DISPATCH_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/iREALLYhateGit/places-infra/actions/workflows/ci.yml/dispatches \
+            -d '{"ref": "labs/lab3"}'
