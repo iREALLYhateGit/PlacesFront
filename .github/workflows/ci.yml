@@ -1,44 +1,18 @@
-name: CI
+name: Notify Infra Integration
 
 on:
   push:
-    branches:
-      - main
-      - dev
-      - 'labs/**'
-      - 'fix/**'
-  pull_request:
+    branches: [labs/lab2]
   workflow_dispatch:
-  repository_dispatch:
-    types:
-      - orchestrated-integration-ci
-
-concurrency:
-  group: ci-${{ github.event_name }}-${{ github.head_ref || github.event.client_payload.ref_name || github.ref_name }}
-  cancel-in-progress: true
 
 jobs:
-  build-test:
-    name: build-test
+  dispatch:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.event.client_payload.ref_name || github.ref_name }}
-
-      - name: set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-          cache: npm
-          cache-dependency-path: package-lock.json
-
-      - name: install dependencies
-        run: npm ci
-
-      - name: run unit tests
-        run: npm test
-
-      - name: run build
-        run: npm run build
+      - name: send dispatch to places-infra
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.INFRA_DISPATCH_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/iREALLYhateGit/places-infra/actions/workflows/ci.yml/dispatches \
+            -d '{"ref": "labs/lab2"}'
