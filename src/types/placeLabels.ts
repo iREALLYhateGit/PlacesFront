@@ -20,4 +20,4 @@ export const PLACE_TYPE_LABEL: Record<PlaceTypeString, string> = {
 };
 
 // Для сортировки или других нужд
-export const PLACE_TYPE_OPTIONS: PlaceTypeString[] = Object.keys(PLACE_TYPE_LABEL) as PlaceTypeString[];
+export const PLACE_TYPE_OPTIONS: PlaceTypeString[] = Object.keys(PLACE_TYPE_LABEL);

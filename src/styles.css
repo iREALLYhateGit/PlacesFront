@@ -57,7 +57,7 @@ body{
   outline:none;
 }
 .card:hover{ transform: translateY(-1px); border-color:#2f435f; }
-.card:focus-visible{ box-shadow: 0 0 0 3px rgba(78,161,255,.25), 0 10px 30px rgba(0,0,0,.25); }
+.card:focus-within{ box-shadow: 0 0 0 3px rgba(78,161,255,.25), 0 10px 30px rgba(0,0,0,.25); }
 
 .cardTitle{
   font-size:16px;
@@ -258,4 +258,13 @@ select{
 option{
   background: #0e1520;
   color: #e7eef7;
+}
+
+.cardBtn {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 16px;
 }

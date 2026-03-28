@@ -6,13 +6,13 @@ import { PLACE_TYPE_LABEL, PLACE_TYPE_OPTIONS } from '../types/placeLabels';
 type Mode = 'add' | 'view' | 'edit';
 
 type Props = {
-  open: boolean;
-  mode: Mode;
-  place: Place | null;
-  onClose: () => void;
-  onCreate: (payload: PlaceCreate) => Promise<void>;
-  onUpdate: (id: number, payload: PlaceCreate) => Promise<void>;
-  onDelete: (id: number) => Promise<void>;
+  readonly open: boolean;
+  readonly mode: Mode;
+  readonly place: Place | null;
+  readonly onClose: () => void;
+  readonly onCreate: (payload: PlaceCreate) => Promise<void>;
+  readonly onUpdate: (id: number, payload: PlaceCreate) => Promise<void>;
+  readonly onDelete: (id: number) => Promise<void>;
 };
 
 // Вспомогательные функции для конвертации
@@ -94,7 +94,7 @@ export function PlaceModal({
   }
 
   // Специальный сеттер для type, работающий со строкой
-  function setType(typeString: PlaceTypeString) {
+  function setType(typeString: string) {
     setField('type', createTypeObject(typeString));
   }
 
@@ -183,7 +183,7 @@ export function PlaceModal({
           <span className="label">Тип</span>
           <select
             value={selectedTypeString}
-            onChange={(e) => setType(e.target.value as PlaceTypeString)}
+            onChange={(e) => setType(e.target.value)}
             disabled={busy || readOnly}
           >
             {PLACE_TYPE_OPTIONS.map((t) => (

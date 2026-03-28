@@ -34,11 +34,6 @@ export function PlacesPage() {
     void load();
   }, []);
 
-  // const modalProps = useMemo(() => {
-  //   if (!modal.open) return null;
-  //   return modal;
-  // }, [modal]);
-
   async function createPlace(payload: PlaceCreate) {
     const created = await placesApi.create(payload);
     setPlaces((prev) => [...prev, created]);
@@ -54,6 +49,30 @@ export function PlacesPage() {
     setPlaces((prev) => prev.filter((p) => p.id !== id));
   }
 
+  const content = loading ? (
+    <div className="muted">Загрузка...</div>
+  ) : places.length === 0 ? (
+    <div className="empty">
+      <div className="emptyTitle">Пока нет мест</div>
+      <div className="muted">Нажми "+", чтобы добавить первую карточку.</div>
+    </div>
+  ) : (
+    <section className="grid">
+      {places.map((p) => (
+        <PlaceCard
+          key={p.id}
+          place={p}
+          onOpen={(place) => setModal({ open: true, mode: 'view', place })}
+          onDelete={(place) => {
+            const ok = confirm(`Удалить "${place.title}"?`);
+            if (!ok) return;
+            void deletePlace(place.id);
+          }}
+        />
+      ))}
+    </section>
+  );
+
   return (
     <div className="page">
       <header className="topbar">
@@ -64,30 +83,7 @@ export function PlacesPage() {
       </header>
 
       {error && <div className="errorBox">{error}</div>}
-
-      {loading ? (
-        <div className="muted">Загрузка...</div>
-      ) : places.length === 0 ? (
-        <div className="empty">
-          <div className="emptyTitle">Пока нет мест</div>
-          <div className="muted">Нажми “+”, чтобы добавить первую карточку.</div>
-        </div>
-      ) : (
-        <section className="grid">
-          {places.map((p) => (
-            <PlaceCard
-              key={p.id}
-              place={p}
-              onOpen={(place) => setModal({ open: true, mode: 'view', place })}
-              onDelete={(place) => {
-                const ok = confirm(`Удалить "${place.title}"?`);
-                if (!ok) return;
-                void deletePlace(place.id);
-              }}
-            />
-          ))}
-        </section>
-      )}
+      {content}
 
       <FabAdd onClick={() => setModal({ open: true, mode: 'add', place: null })} />
 

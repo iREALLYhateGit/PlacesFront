@@ -1,4 +1,4 @@
-type Props = { onClick: () => void };
+type Props = { readonly onClick: () => void };
 
 export function FabAdd({ onClick }: Props) {
   return (

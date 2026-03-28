@@ -14,7 +14,6 @@ export type Place = {
 };
 
 export type PlaceCreate = Omit<Place, 'id'>;
-export type PlaceUpdate = PlaceCreate;
 
 // Для обратной совместимости с компонентами, которым нужны строковые типы
 export type PlaceTypeString = PlaceType['title']; // 'cathedral' | 'museum' | ...

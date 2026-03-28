@@ -1,4 +1,4 @@
-import type { Place, PlaceCreate, PlaceUpdate } from '../types/place';
+import type { Place, PlaceCreate } from '../types/place';
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -7,7 +7,7 @@ async function http<T>(path: string, init?: RequestInit): Promise<T> {
     ...init,
     headers: {
       'Content-Type': 'application/json',
-      ...(init?.headers ?? {}),
+      ...init?.headers,
     },
   });
 
@@ -27,7 +27,7 @@ export const placesApi = {
   list: () => http<Place[]>('/places', { method: 'GET' }),
   create: (payload: PlaceCreate) =>
     http<Place>('/places', { method: 'POST', body: JSON.stringify(payload) }),
-  update: (id: number, payload: PlaceUpdate) =>
+  update: (id: number, payload: PlaceCreate) =>
     http<Place>(`/places/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
   remove: (id: number) => http<void>(`/places/${id}`, { method: 'DELETE' }),
 };
