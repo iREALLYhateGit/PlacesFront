@@ -49,29 +49,34 @@ export function PlacesPage() {
     setPlaces((prev) => prev.filter((p) => p.id !== id));
   }
 
-  const content = loading ? (
-    <div className="muted">Загрузка...</div>
-  ) : places.length === 0 ? (
-    <div className="empty">
-      <div className="emptyTitle">Пока нет мест</div>
-      <div className="muted">Нажми "+", чтобы добавить первую карточку.</div>
-    </div>
-  ) : (
-    <section className="grid">
-      {places.map((p) => (
-        <PlaceCard
-          key={p.id}
-          place={p}
-          onOpen={(place) => setModal({ open: true, mode: 'view', place })}
-          onDelete={(place) => {
-            const ok = confirm(`Удалить "${place.title}"?`);
-            if (!ok) return;
-            void deletePlace(place.id);
-          }}
-        />
-      ))}
-    </section>
-  );
+  let content;
+  if (loading) {
+    content = <div className="muted">Загрузка...</div>;
+  } else if (places.length === 0) {
+    content = (
+      <div className="empty">
+        <div className="emptyTitle">Пока нет мест</div>
+        <div className="muted">Нажми "+", чтобы добавить первую карточку.</div>
+      </div>
+    );
+  } else {
+    content = (
+      <section className="grid">
+        {places.map((p) => (
+          <PlaceCard
+            key={p.id}
+            place={p}
+            onOpen={(place) => setModal({ open: true, mode: 'view', place })}
+            onDelete={(place) => {
+              const ok = confirm(`Удалить "${place.title}"?`);
+              if (!ok) return;
+              void deletePlace(place.id);
+            }}
+          />
+        ))}
+      </section>
+    );
+  }
 
   return (
     <div className="page">
